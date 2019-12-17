@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body> 
+    <div id="app">
+        
+        <h2 class="title">uft-8与unicode互相转换</h2>
+        <div class="container">
+
+            <div class="line">
+                <textarea class="inputText" ref="textarea" v-model="inputText"></textarea>
+            </div>
+            <p class="line" >
+                <span class="btn" @click="str2Utf8">字符串(unicode)转utf-8</span>
+                <span class="btn" @click="utf82Str">utf-8转字符串(unicode)</span>
+            </p>
+        </div>
+        <p class="info" >
+            预留文本: 
+            <span class="btn" @click="addText(0)">字符串: 测试案例</span>
+            <span class="btn" @click="addText(1)">字符串: 一首诗</span>
+            <span class="btn" @click="addText(2)">uft-8: 测试案例</span>
+            <span class="btn" @click="addText(3)">uft-8: 一句名言</span>
+        </p>
+        <div class="container">
+    
+            <p class="line output">
+                <span>{{output}}</span>
+            </p>
+            <p class="line" v-show="output && str2Utf8Data.length > 0">
+                <span class="btn" @click="outputTypeToggle" v-text="outputType===1?'删去每4个字符之间空格':'每4个字符增加空格'"></span>
+            </p>
+            <table class="box" v-if="str2Utf8Data.length > 0">
+                <tbody>
+                    <tr class="box-title">
+                        <td></td>
+                        <td>unicode 16进制</td>
+                        <td>范围</td>
+                        <td>unicode 2进制</td>
+                        <td>uft-8 2进制</td>
+                        <td>uft-8 16进制</td>
+                    </tr>
+                    <tr v-for="(item,index) in str2Utf8Data" class="box-line" :class="{'box-line-underline-2':index%10===9}">
+                        <td>
+                            <span>{{item.text}}</span>
+                        </td>
+                        <td>
+                            <span v-for="(a,i) in item.r16" :class="{'color-4':!a.isPad,'letter-margin':i%4===0}">{{a.letter}}</span>
+                        </td>
+                        <td>
+                            <span>{{item.unicodeTypeText}}</span>
+                        </td>
+                        <td>
+                            <span v-for="(a,i) in item.r2" :class="['color-' + a.color]">{{a.letter}}</span>
+                        </td>
+                        <td>
+                            <span v-for="(a,i) in item.uft8R2" :class="['color-' + a.color,{'letter-margin':i%8===0}]">{{a.letter}}</span>
+                        </td>
+                        <td>
+                            <span>{{item.uft8R16}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="box" v-if="uft82StrData.length > 0">
+                <tbody>
+                    <tr class="box-title">
+                        <td>utf-8 单字节</td>
+                        <td>utf-8 2进制</td>
+                        <td>unicode 2进制</td>
+                        <td>unicode 16进制(4字节)</td>
+                        <td>字符</td>
+                    </tr>
+                    <tr v-for="(item,index) in uft82StrData" class="box-line" :class="{'box-line-underline-3':item.byteLength && index !==uft82StrData.length - 1}">
+                        <td>
+                            <span>{{item.r16}}</span>
+                        </td>
+                        <td>
+                            <span v-for="(a,i) in item.r2Obj" :class="'color-' + a.color">{{a.letter}}</span>
+                        </td>
+                        <td v-if="item.byteLength" :rowspan="item.byteLength">
+                            <span v-for="(a,i) in item.allR2Obj" :class="'color-' + a.color">{{a.letter}}</span>
+                        </td>
+                        <td v-if="item.byteLength" :rowspan="item.byteLength">
+                            <span>{{item.allR16}}</span>
+                        </td>
+                        <td v-if="item.byteLength" :rowspan="item.byteLength">
+                            <span>{{item.newStr}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr v-if="uft82StrData.length > 0 || str2Utf8Data.length > 0" class="box-line-underline">
+        </div>
+        <p class="tip">
+            2018 
+            <a href="https://github.com/haizai" target="_blank">haizai</a>
+            <a href="https://github.com/haizai/cloud/tree/master/server/public/demo/sokoban" target="_blank">源码</a>
+        </p>
+    </div>
+    <script src="autosize.min.js"></script>
+    <script src="vue.min.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
